@@ -26,7 +26,11 @@ exports.postBlog = async (req, res) => {
             content: req.body.content,
             source: req.body.source.split(', '),
             createdAt: Date.now(),
+            user: req.user.id
         })
+        req.user.blog.push(newBlog._id)
+        req.user.save({validateBeforeSave: false})
+
 
         res.status(200).json({
             status: 'success',

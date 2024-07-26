@@ -4,7 +4,7 @@ const User = require('./../model/userModel')
 
 exports.userSignUp = async (req, res) => {
     try{
-        const newUser = await User.create(req.body)
+        const newUser = await User.create({...req.body, passwordChangedAt: Date.now()})
         res.status(200).json({
             status: 'success',
             data: {
@@ -58,7 +58,12 @@ exports.deleteUserAdmin = async  (req, res) => {
 
 exports.getAUser = async (req, res) => {
     try{
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id).populate({
+            path: 'blog',
+            populate: {
+                path: 'title',
+            }
+        })
         res.status(200).json({
             status: 'success',
             data: {

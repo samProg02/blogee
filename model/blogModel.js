@@ -21,10 +21,20 @@ const blogSchema = new mongoose.Schema({
     createdAt:{
         type: Date,
         required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User' ,// Referencing the User model
+        required: true
     }
 
 })
 
-
+blogSchema.pre(/^find/, function (next){
+    this.populate({
+        path: 'user', select:'-__v -passwordChangedAt -user'
+    })
+    next();
+})
 const blogModel = mongoose.model('Blog', blogSchema)
 module.exports = blogModel;
