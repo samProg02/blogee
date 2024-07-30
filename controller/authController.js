@@ -59,6 +59,7 @@ exports.protect = async (req, res, next) => {
         if(user.passwordChanged(decoded.iat)) throw new Error('Password has been changed before try logging in again')
         req.user = user;
 
+
     }catch(err){
         res.status(400).json({
             status: 'fail',

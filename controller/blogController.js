@@ -110,6 +110,7 @@ exports.getAllBlog = async (req, res) => {
 
 exports.deletePost = async (req, res) => {
     try{
+        if(!req.user.blog.includes(req.params.id)) throw new Error('you do not have access to delete this blog');
         const deleted = await Blog.findByIdAndDelete(req.params.id);
         res.status(200).json({
             status: 'success',
@@ -134,6 +135,31 @@ exports.getAPost = async (req, res) => {
             status: 'success',
             data: {
                 post
+            }
+        })
+    }catch(err){
+        res.status(200).json({
+            status: 'failed',
+            err: err.message
+
+        })
+    }
+}
+
+
+exports.updateBlog =async (req, res) => {
+    try{
+        const toUpdate = {
+            title: req.body.title,
+            category: req.body.category,
+            content: req.body.content,
+            source: req.body.source,
+        }
+        const updated = await Blog.findByIdAndUpdate(req.params.id, toUpdate);
+        res.status(200).json({
+            status: 'success',
+            data:{
+                blog: updated
             }
         })
     }catch(err){
